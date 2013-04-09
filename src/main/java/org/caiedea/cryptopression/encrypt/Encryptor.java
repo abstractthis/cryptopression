@@ -3,7 +3,7 @@ package org.caiedea.cryptopression.encrypt;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 
 /**
  * Represents the base class for all encryption implementations. The
@@ -13,6 +13,7 @@ import java.io.UnsupportedEncodingException;
  *
  */
 public abstract class Encryptor<T> {
+	protected static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
 	protected InputStream inStream;
 	protected OutputStream outStream;
 	
@@ -54,15 +55,8 @@ public abstract class Encryptor<T> {
 	 * @param s text that needs to be encrypted.
 	 */
 	public void setEncryptTarget(String s) {
-		byte[] strUtf8Bytes = null;
-		ByteArrayInputStream bis = null;
-		try {
-			strUtf8Bytes = s.getBytes("UTF-8");
-			bis = new ByteArrayInputStream(strUtf8Bytes);
-			this.inStream = bis;
-		}
-		catch(UnsupportedEncodingException e) {
-			// TODO: Hook in SLF4J log statement
-		}
+		byte[] strUtf8Bytes = s.getBytes(DEFAULT_CHARSET);
+		ByteArrayInputStream bis = new ByteArrayInputStream(strUtf8Bytes);
+		this.setEncryptTarget(bis);
 	}
 }
