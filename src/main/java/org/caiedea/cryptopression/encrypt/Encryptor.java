@@ -4,6 +4,12 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.security.NoSuchAlgorithmException;
+
+import javax.crypto.Cipher;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Represents the base class for all encryption implementations. The
@@ -13,7 +19,22 @@ import java.nio.charset.Charset;
  *
  */
 public abstract class Encryptor<T> {
+	private static Logger log = LoggerFactory.getLogger(Encryptor.class);
+	static {
+		try {
+			int maxKeyLen = Cipher.getMaxAllowedKeyLength("AES");
+			if (maxKeyLen != 128) {
+				log.error("JCE Policy Files need to be upgraded to UNLIMITED. Max Key Length is only 128-bit!!");
+				Encryptor.UNLIMITED_JCE_POLICY_ENABLED = true;
+			}
+		}
+		catch(NoSuchAlgorithmException algoEx) {
+			log.error("Java Cryptography Extension version is dated or not available!!!");
+			throw new RuntimeException(algoEx);
+		}
+	}
 	protected static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
+	protected static boolean UNLIMITED_JCE_POLICY_ENABLED = false;
 	protected InputStream inStream;
 	protected OutputStream outStream;
 	
