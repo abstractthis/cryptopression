@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class Encryptor<T> {
 	private static Logger log = LoggerFactory.getLogger(Encryptor.class);
+	// Check to make sure that the JRE supports the encryption strength we must use
 	static {
 		try {
 			int maxKeyLen = Cipher.getMaxAllowedKeyLength("AES");
