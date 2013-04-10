@@ -30,10 +30,13 @@ public class AesEncryptor<T> extends Encryptor<T> {
 	private static final String ENC_ALGO_KEY = "cryptopression.algorithm";
 	private static final String SECRET_TYPE = "PBKDF2WithHmacSHA1";
 	private static final String CIPHER_TYPE = "AES/CBC/PKCS5Padding";
-	private static final String CONFIG_SALT_KEY = "aes.salt";
-	private static final String CONFIG_ITER_KEY = "aes.iterations";
-	private static final String CONFIG_CIPHER_KEY = "aes.encrypt.cipher";
-	private static final String CONFIG_INITVEC_KEY = "aes.initVector";
+	protected static final String CONFIG_SALT_KEY = "aes.salt";
+	protected static final String CONFIG_ITER_KEY = "aes.iterations";
+	protected static final String CONFIG_CIPHER_KEY = "aes.encrypt.cipher";
+	protected static final String CONFIG_INITVEC_KEY = "aes.initVector";
+	
+	// TODO: Remove the use of these
+	protected Cipher aesCipher;
 	
 	protected Encryptor<T> encryptor;
 	
@@ -70,6 +73,9 @@ public class AesEncryptor<T> extends Encryptor<T> {
 			byte[] initVector = algoParams.getParameterSpec(IvParameterSpec.class).getIV();
 			aesConfig.setTypedAttribute(CONFIG_CIPHER_KEY, cipher);
 			aesConfig.setTypedAttribute(CONFIG_INITVEC_KEY, initVector);
+			
+			// Temporary workaround remove
+			aesCipher = cipher;
 		}
 		catch(NoSuchAlgorithmException algoEx) {
 			log.error("Algorithm specified NOT supported!");
