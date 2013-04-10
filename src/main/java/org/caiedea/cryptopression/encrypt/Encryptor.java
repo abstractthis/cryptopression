@@ -52,7 +52,7 @@ public abstract class Encryptor<T> {
 		this.config = this.configSpecifics();
 		String charsetName = config.getStringAttribute("cryptopression.charset");
 		Charset chSet = charsetName == null ? 
-				Charset.forName("UTF-8") : Charset.forName(charsetName);
+				Charset.forName("UTF-8") : Charset.forName(charsetName.toUpperCase());
 		config.setTypedAttribute(CHARSET_KEY, chSet);
 	}
 	
