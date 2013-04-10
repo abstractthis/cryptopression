@@ -8,7 +8,7 @@
   <packaging>jar</packaging>
 
   <name>cryptopression</name>
-  <url>http://maven.apache.org</url>
+  <url>http://www.ca-iedea.org</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
