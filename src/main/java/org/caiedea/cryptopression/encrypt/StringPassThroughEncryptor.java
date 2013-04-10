@@ -16,6 +16,11 @@ import java.util.Arrays;
  */
 public class StringPassThroughEncryptor extends Encryptor<String> {
 	private static final int BUFFER_SIZE = 4 * 1024;
+	
+	@Override
+	protected EncryptorConfig configSpecifics() {
+		return new EncryptorConfig();
+	}
 
 	@Override
 	public String encrypt() {
