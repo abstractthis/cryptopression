@@ -34,10 +34,34 @@ public abstract class Encryptor<T> {
 			throw new RuntimeException(algoEx);
 		}
 	}
-	protected static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
+	protected static final String CHARSET_KEY = "config.charset";
 	protected static boolean UNLIMITED_JCE_POLICY_ENABLED = false;
+	
+	protected EncryptorConfig config;
 	protected InputStream inStream;
 	protected OutputStream outStream;
+	
+	/**
+	 * Forces configuration to be performed.
+	 */
+	public Encryptor() {
+		this.configure();
+	}
+	
+	protected void configure() {
+		this.config = this.configSpecifics();
+		String charsetName = config.getStringAttribute("cryptopression.charset");
+		Charset chSet = charsetName == null ? 
+				Charset.forName("UTF-8") : Charset.forName(charsetName);
+		config.setTypedAttribute(CHARSET_KEY, chSet);
+	}
+	
+	/**
+	 * Called to initialize the <code>Encryptor</code>s attributes needed
+	 * to perform the encryption. Because the attributes needed are implementation
+	 * specific the <code>EncryptorConfig</code> is a basic key-value map.
+	 */
+	protected abstract EncryptorConfig configSpecifics();
 	
 	/**
 	 * Actually performs the encryption of the data specified by
@@ -77,7 +101,8 @@ public abstract class Encryptor<T> {
 	 * @param s text that needs to be encrypted.
 	 */
 	public void setEncryptTarget(String s) {
-		byte[] strUtf8Bytes = s.getBytes(DEFAULT_CHARSET);
+		final Charset charSet = config.getTypedAttribute(CHARSET_KEY, Charset.defaultCharset());
+		byte[] strUtf8Bytes = s.getBytes(charSet);
 		ByteArrayInputStream bis = new ByteArrayInputStream(strUtf8Bytes);
 		this.setEncryptTarget(bis);
 	}
