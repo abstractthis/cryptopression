@@ -43,9 +43,10 @@ public class CompressFileEncryptor extends CompressEncryptor<File> {
 	@Override
 	public File encrypt() {
 		File encryptedFile = null;
+		FileInputStream fis = null;
 		try {
 			encryptedFile = this.encryptor.encrypt();
-			this.setEncryptTarget(new FileInputStream(encryptedFile));
+			fis = new FileInputStream(encryptedFile);
 			
 			int bufferSize = this.config.getIntAttribute(CONFIG_BUFFER_SIZE);
 			byte[] buffer = new byte[bufferSize];
@@ -80,8 +81,8 @@ public class CompressFileEncryptor extends CompressEncryptor<File> {
 					this.outStream.close();
 				}
 				
-				if (this.inStream != null) {
-					this.inStream.close();
+				if (fis != null) {
+					fis.close();
 				}
 			}
 			catch(IOException ioe) {
