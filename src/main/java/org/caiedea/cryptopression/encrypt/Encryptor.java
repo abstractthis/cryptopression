@@ -1,6 +1,5 @@
 package org.caiedea.cryptopression.encrypt;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
@@ -24,9 +23,9 @@ public abstract class Encryptor<T> {
 	static {
 		try {
 			int maxKeyLen = Cipher.getMaxAllowedKeyLength("AES");
-			if (maxKeyLen != 128) {
+			if (maxKeyLen == 128) {
 				log.error("JCE Policy Files need to be upgraded to UNLIMITED. Max Key Length is only 128-bit!!");
-				Encryptor.UNLIMITED_JCE_POLICY_ENABLED = true;
+				Encryptor.UNLIMITED_JCE_POLICY_ENABLED = false;
 			}
 		}
 		catch(NoSuchAlgorithmException algoEx) {
@@ -35,7 +34,7 @@ public abstract class Encryptor<T> {
 		}
 	}
 	protected static final String CHARSET_KEY = "config.charset";
-	protected static boolean UNLIMITED_JCE_POLICY_ENABLED = false;
+	protected static boolean UNLIMITED_JCE_POLICY_ENABLED = true;
 	
 	protected EncryptorConfig config;
 	protected InputStream inStream;
@@ -53,7 +52,7 @@ public abstract class Encryptor<T> {
 		String charsetName = config.getStringAttribute("cryptopression.charset");
 		Charset chSet = charsetName == null ? 
 				Charset.forName("UTF-8") : Charset.forName(charsetName.toUpperCase());
-		config.setTypedAttribute(CHARSET_KEY, chSet);
+		this.config.setTypedAttribute(CHARSET_KEY, chSet);
 	}
 	
 	/**
@@ -81,29 +80,4 @@ public abstract class Encryptor<T> {
 	 */
 	public abstract T encrypt();
 	
-	/**
-	 * Provide the data that needs to be encrypted by this
-	 * <code>Encryptor</code>.
-	 * @param is a stream to any data source.
-	 */
-	public void setEncryptTarget(InputStream is) {
-		this.inStream = is;
-	}
-	
-	/**
-	 * Provide the data that needs to be encrypted by this
-	 * <code>Encryptor</code>.
-	 * <p>
-	 * The default implementation converts the provided <code>String</code>
-	 * into its byte array representation (UTF-8 charset) and initialize the
-	 * <code>Encryptor</code>s InputStream to be a <code>ByteArrayInputStream</code>
-	 * pointing at the byte array representation of the <code>String</code>.
-	 * @param s text that needs to be encrypted.
-	 */
-	public void setEncryptTarget(String s) {
-		final Charset charSet = config.getTypedAttribute(CHARSET_KEY, Charset.defaultCharset());
-		byte[] strUtf8Bytes = s.getBytes(charSet);
-		ByteArrayInputStream bis = new ByteArrayInputStream(strUtf8Bytes);
-		this.setEncryptTarget(bis);
-	}
 }
