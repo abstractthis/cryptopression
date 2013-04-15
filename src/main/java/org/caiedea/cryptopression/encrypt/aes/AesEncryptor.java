@@ -35,9 +35,6 @@ public class AesEncryptor<T> extends Encryptor<T> {
 	protected static final String CONFIG_CIPHER_KEY = "aes.encrypt.cipher";
 	protected static final String CONFIG_INITVEC_KEY = "aes.initVector";
 	
-	// TODO: Remove the use of these
-	protected Cipher aesCipher;
-	
 	protected Encryptor<T> encryptor;
 	
 	public AesEncryptor(Encryptor<T> e) {
@@ -71,11 +68,8 @@ public class AesEncryptor<T> extends Encryptor<T> {
 			cipher.init(Cipher.ENCRYPT_MODE, actualSecret);
 			AlgorithmParameters algoParams = cipher.getParameters();
 			byte[] initVector = algoParams.getParameterSpec(IvParameterSpec.class).getIV();
-			aesConfig.setTypedAttribute(CONFIG_CIPHER_KEY, cipher);
+			aesConfig.setObjectAttribute(CONFIG_CIPHER_KEY, cipher);
 			aesConfig.setTypedAttribute(CONFIG_INITVEC_KEY, initVector);
-			
-			// Temporary workaround remove
-			aesCipher = cipher;
 		}
 		catch(NoSuchAlgorithmException algoEx) {
 			log.error("Algorithm specified NOT supported!");
@@ -103,12 +97,7 @@ public class AesEncryptor<T> extends Encryptor<T> {
 
 	@Override
 	public T encrypt() {
-		log.error("AES encryption base class has not implementation; use one of the subclasses.");
+		log.error("AES encryption base class has no implementation; use one of the subclasses.");
 		return null;
 	}
-	
-	protected void configure() {
-		
-	}
-
 }
