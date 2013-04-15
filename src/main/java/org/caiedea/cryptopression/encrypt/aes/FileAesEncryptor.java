@@ -33,7 +33,6 @@ public class FileAesEncryptor extends AesEncryptor<File> {
 			FileOutputStream fos = new FileOutputStream(file);
 			Cipher cipher = (Cipher) config.getObjectAttribute(CONFIG_CIPHER_KEY);
 			CipherOutputStream cos = new CipherOutputStream(fos, cipher);
-			//OutputStream os = this.compressType == null ? cos : configCompressionStream(cos);
 			this.outStream = cos;
 		}
 		catch(FileNotFoundException file404Ex) {
