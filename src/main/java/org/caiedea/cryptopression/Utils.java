@@ -17,7 +17,7 @@ public abstract class Utils {
 	private static Properties propCache;
 	static {
 		InputStream propStream =
-				Utils.class.getResourceAsStream("cryptopression.properties");
+				Utils.class.getResourceAsStream("/cryptopression.properties");
 		propCache = new Properties();
 		try {
 			propCache.load(propStream);
