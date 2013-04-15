@@ -11,6 +11,10 @@ public final class EncryptorConfig {
 		return value;
 	}
 	
+	public Object getObjectAttribute(String key) {
+		return config.get(key);
+	}
+	
 	public String getStringAttribute(String key) {
 		return (String)config.get(key);
 	}
@@ -21,6 +25,10 @@ public final class EncryptorConfig {
 	}
 	
 	public void setIntAttribute(String key, int value) {
+		config.put(key, value);
+	}
+	
+	public void setObjectAttribute(String key, Object value) {
 		config.put(key, value);
 	}
 	
