@@ -19,9 +19,12 @@ public class CompressFileEncryptor extends CompressEncryptor<File> {
 	
 	private File compressedFile;
 	
-	public CompressFileEncryptor(Encryptor<File> fileEncryptor, File file) {
+	public CompressFileEncryptor(Encryptor<File> fileEncryptor) {
 		super(fileEncryptor);
-		compressedFile = file;
+	}
+	
+	public CompressFileEncryptor(Encryptor<File> fileEncryptor, File file) {
+		this(fileEncryptor);
 		this.initAndSetStreams(file);
 	}
 	
@@ -30,6 +33,7 @@ public class CompressFileEncryptor extends CompressEncryptor<File> {
 	}
 	
 	private void initAndSetStreams(File file) {
+		compressedFile = file;
 		try {
 			ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(file));
 			this.outStream = zos;
@@ -48,12 +52,18 @@ public class CompressFileEncryptor extends CompressEncryptor<File> {
 			encryptedFile = this.encryptor.encrypt();
 			fis = new FileInputStream(encryptedFile);
 			
+			// If the default was constructor was used (so no result filename provided)
+			// just append the zip extension to the input filename
+			if (this.compressedFile == null) {
+				this.initAndSetStreams(new File(encryptedFile.getName() + ".zip"));
+			}
+			
 			int bufferSize = this.config.getIntAttribute(CONFIG_BUFFER_SIZE);
 			byte[] buffer = new byte[bufferSize];
 			ZipOutputStream zos = (ZipOutputStream) this.outStream;
 			zos.putNextEntry(new ZipEntry("encData"));
 			int bytesRead = 0;
-			while ((bytesRead = this.inStream.read(buffer)) != -1) {
+			while ((bytesRead = fis.read(buffer)) != -1) {
 				zos.write(buffer, 0, bytesRead);
 			}
 			boolean deleteInputFile = config.getIntAttribute(CONFIG_KEEP_RAW_ENC) != 0;
