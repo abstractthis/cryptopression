@@ -19,12 +19,12 @@ public class App {
     	//System.exit(0);
     	File file = new File(exeDir + "/encTest.pdf");
     	File result = new File(exeDir + "/encryptResult");
-    	File resultCompressed = new File(exeDir + "/encryptResult.zip");
+    	//File resultCompressed = new File(exeDir + "/encryptResult.zip");
     	try {
     		Encryptor<File> noAlgoEncryptor = new FilePassThroughEncryptor(file);
     		Encryptor<File> fileEncryptor =
     				new FileAesEncryptor(noAlgoEncryptor, result);
-    		Encryptor<File> compressEncryptor = new CompressFileEncryptor(fileEncryptor, resultCompressed);
+    		Encryptor<File> compressEncryptor = new CompressFileEncryptor(fileEncryptor);
     		System.err.println("Performing encryption...");
     		compressEncryptor.encrypt();
     		System.err.println( "encryption DONE!" );
