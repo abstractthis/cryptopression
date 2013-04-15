@@ -3,6 +3,16 @@ package org.caiedea.cryptopression.encrypt;
 import java.io.File;
 
 public class FilePassThroughEncryptor extends Encryptor<File> {
+	private File targetFile;
+	
+	public FilePassThroughEncryptor(File file) {
+		super();
+		targetFile = file;
+	}
+	
+	public FilePassThroughEncryptor(String path) {
+		this(new File(path));
+	}
 	
 	@Override
 	protected EncryptorConfig configSpecifics() {
@@ -11,6 +21,6 @@ public class FilePassThroughEncryptor extends Encryptor<File> {
 
 	@Override
 	public File encrypt() {
-		return null;
+		return targetFile;
 	}
 }
