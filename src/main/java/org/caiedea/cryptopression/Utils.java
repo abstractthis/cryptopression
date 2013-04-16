@@ -1,5 +1,6 @@
 package org.caiedea.cryptopression;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.SecureRandom;
@@ -7,12 +8,14 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import org.caiedea.cryptopression.decrypt.DecryptorConfig;
 import org.caiedea.cryptopression.encrypt.EncryptorConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public abstract class Utils {
 	private static final Logger log = LoggerFactory.getLogger(Utils.class);
+	private static final String CONFIG_KEEP_RAW_ENC = "cryptopression.keepRawInput";
 	private static final int MIN_ITERATIONS = 1024;
 	private static Properties propCache;
 	static {
@@ -36,6 +39,27 @@ public abstract class Utils {
 	 */
 	public static Properties getProperties() {
 		return propCache;
+	}
+	
+	public static void deleteDecryptorInputFile(File file, DecryptorConfig config) {
+		boolean shouldDelete = config.getIntAttribute(CONFIG_KEEP_RAW_ENC) != 0;
+		Utils.deleteInputFileIfNeeded(file, shouldDelete);
+	}
+	
+	public static void deleteEncryptorInputFile(File file, EncryptorConfig config) {
+		boolean shouldDelete = config.getIntAttribute(CONFIG_KEEP_RAW_ENC) != 0;
+		Utils.deleteInputFileIfNeeded(file, shouldDelete);
+	}
+	
+	private static void deleteInputFileIfNeeded(File file, boolean shouldDelete) {
+		if (shouldDelete) {
+			boolean deleteSuccessful = file.delete();
+			if (!deleteSuccessful) {
+				String msg =
+						String.format("Input file (%s) could NOT be deleted even though deletion was requested.", file.getAbsolutePath());
+				log.error(msg);
+			}
+		}
 	}
 	
 	/**
