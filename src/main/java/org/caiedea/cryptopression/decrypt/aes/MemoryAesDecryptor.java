@@ -10,7 +10,7 @@ public class MemoryAesDecryptor extends AesDecryptor<byte[]> {
 	
 	@Override
 	public byte[] decrypt() {
-		return null;
+		throw new UnsupportedOperationException("Memory AES Decryptor not implemented yet.");
 	}
 
 }

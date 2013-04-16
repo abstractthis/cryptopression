@@ -9,7 +9,7 @@ public class MemoryPassThroughEncryptor extends Encryptor<byte[]> {
 
 	@Override
 	public byte[] encrypt() {
-		return null;
+		throw new UnsupportedOperationException("Memory Encryptor not implemented yet.");
 	}
 
 }
