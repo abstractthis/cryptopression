@@ -3,8 +3,8 @@ package org.caiedea.cryptopression.encrypt;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class EncryptorConfig {
-	private Map<String,Object> config = new HashMap<String,Object>();
+public class EncryptorConfig {
+	protected Map<String,Object> config = new HashMap<String,Object>();
 	
 	public int getIntAttribute(String key) {
 		int value = ((Integer)config.get(key)).intValue();
