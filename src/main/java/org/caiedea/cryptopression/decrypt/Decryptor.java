@@ -1,39 +1,54 @@
 package org.caiedea.cryptopression.decrypt;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.security.NoSuchAlgorithmException;
+
+import javax.crypto.Cipher;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class Decryptor<T> {
-	protected static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
+	private static Logger log = LoggerFactory.getLogger(Decryptor.class);
+	// Check to make sure that the JRE supports the encryption strength we must use
+	static {
+		try {
+			int maxKeyLen = Cipher.getMaxAllowedKeyLength("AES");
+			if (maxKeyLen == 128) {
+				log.error("JCE Policy Files need to be upgraded to UNLIMITED. Max Key Length is only 128-bit!!");
+				Decryptor.UNLIMITED_JCE_POLICY_ENABLED = false;
+			}
+		}
+		catch(NoSuchAlgorithmException algoEx) {
+			log.error("Java Cryptography Extension version is dated or not available!!!");
+			throw new RuntimeException(algoEx);
+		}
+	}
+	protected static final String CHARSET_KEY = "config.charset";
+	protected static boolean UNLIMITED_JCE_POLICY_ENABLED = true;
+	
+	protected DecryptorConfig config;
 	protected InputStream inStream;
 	protected OutputStream outStream;
 	
+	/**
+	 * Forces configuration to be performed.
+	 */
+	public Decryptor() {
+		this.configure();
+	}
+	
+	protected void configure() {
+		this.config = this.configSpecifics();
+		String charsetName = config.getStringAttribute("cryptopression.charset");
+		Charset chSet = charsetName == null ? 
+				Charset.forName("UTF-8") : Charset.forName(charsetName.toUpperCase());
+		this.config.setTypedAttribute(CHARSET_KEY, chSet);
+	}
+	
+	protected abstract DecryptorConfig configSpecifics();
+	
 	public abstract T decrypt();
-	
-	/**
-	 * Provide the data that needs to be decrypted by this
-	 * <code>Decryptor</code>.
-	 * @param is a stream to any data source.
-	 */
-	public void setDecryptTarget(InputStream is) {
-		this.inStream = is;
-	}
-	
-	/**
-	 * Provide the data that needs to be decrypted by this
-	 * <code>Decryptor</code>.
-	 * <p>
-	 * The default implementation converts the provided <code>String</code>
-	 * into its byte array representation (UTF-8 charset) and initialize the
-	 * <code>Decryptor</code>s InputStream to be a <code>ByteArrayInputStream</code>
-	 * pointing at the byte array representation of the <code>String</code>.
-	 * @param s text that needs to be encrypted.
-	 */
-	public void setEncryptTarget(String s) {
-		byte[] strUtf8Bytes = s.getBytes(DEFAULT_CHARSET);
-		ByteArrayInputStream bis = new ByteArrayInputStream(strUtf8Bytes);
-		this.setDecryptTarget(bis);
-	}
 }
