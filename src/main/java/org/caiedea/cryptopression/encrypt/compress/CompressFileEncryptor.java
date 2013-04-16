@@ -55,7 +55,7 @@ public class CompressFileEncryptor extends CompressEncryptor<File> {
 			// If the default was constructor was used (so no result filename provided)
 			// just append the zip extension to the input filename
 			if (this.compressedFile == null) {
-				this.initAndSetStreams(new File(encryptedFile.getName() + ".zip"));
+				this.initAndSetStreams(new File(encryptedFile.getAbsolutePath() + ".zip"));
 			}
 			
 			int bufferSize = this.config.getIntAttribute(CONFIG_BUFFER_SIZE);
