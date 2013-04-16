@@ -34,6 +34,7 @@ public class AesEncryptor<T> extends Encryptor<T> {
 	protected static final String CONFIG_ITER_KEY = "aes.iterations";
 	protected static final String CONFIG_CIPHER_KEY = "aes.encrypt.cipher";
 	protected static final String CONFIG_INITVEC_KEY = "aes.initVector";
+	protected static final String CONFIG_FILE_BUFFER_SIZE = "cryptopression.fileBuffer";
 	
 	protected Encryptor<T> encryptor;
 	
