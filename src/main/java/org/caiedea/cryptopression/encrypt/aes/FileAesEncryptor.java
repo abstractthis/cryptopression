@@ -9,6 +9,7 @@ import java.io.IOException;
 import javax.crypto.Cipher;
 import javax.crypto.CipherOutputStream;
 
+import org.caiedea.cryptopression.Utils;
 import org.caiedea.cryptopression.encrypt.Encryptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +49,7 @@ public class FileAesEncryptor extends AesEncryptor<File> {
 			File targetFile = this.encryptor.encrypt();
 			fis = new FileInputStream(targetFile);
 			int bytesRead = 0;
-			int bufferSize = this.config.getIntAttribute("cryptopression.fileBuffer");
+			int bufferSize = this.config.getIntAttribute(CONFIG_FILE_BUFFER_SIZE);
 			byte[] buffer = new byte[bufferSize];
 			
 			// Setup cipher stream which performs the encryption
@@ -56,6 +57,7 @@ public class FileAesEncryptor extends AesEncryptor<File> {
 				this.outStream.write(buffer, 0, bytesRead);
 				log.debug("Bytes encrypted: " + bytesRead);
 			}
+			Utils.deleteEncryptorInputFile(targetFile, this.config);
 		}
 		catch(IOException ioe) {
 			log.error("IO issue while trying to encrypt!!");
