@@ -8,14 +8,13 @@ import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.caiedea.cryptopression.Utils;
 import org.caiedea.cryptopression.encrypt.Encryptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class CompressFileEncryptor extends CompressEncryptor<File> {
 	private static final Logger log = LoggerFactory.getLogger(CompressFileEncryptor.class);
-	private static final String CONFIG_BUFFER_SIZE = "cryptopression.compressBuffer";
-	private static final String CONFIG_KEEP_RAW_ENC = "cryptopression.keepRawInput";
 	
 	private File compressedFile;
 	
@@ -66,15 +65,7 @@ public class CompressFileEncryptor extends CompressEncryptor<File> {
 			while ((bytesRead = fis.read(buffer)) != -1) {
 				zos.write(buffer, 0, bytesRead);
 			}
-			boolean deleteInputFile = config.getIntAttribute(CONFIG_KEEP_RAW_ENC) != 0;
-			if (deleteInputFile) {
-				boolean deleteSuccessful = encryptedFile.delete();
-				if (!deleteSuccessful) {
-					String msg =
-							String.format("Input file (%s) could NOT be deleted even though deletion was requested.", encryptedFile.getAbsolutePath());
-					log.error(msg);
-				}
-			}
+			Utils.deleteEncryptorInputFile(encryptedFile, this.config);
 		}
 		catch(FileNotFoundException encFile404Ex) {
 			log.error("Encrypted File not found at " + encryptedFile.getAbsolutePath());
