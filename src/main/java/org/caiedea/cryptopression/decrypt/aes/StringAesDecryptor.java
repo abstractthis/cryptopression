@@ -11,7 +11,7 @@ public class StringAesDecryptor extends AesDecryptor<String> {
 
 	@Override
 	public String decrypt() {
-		return null;
+		throw new UnsupportedOperationException("String AES Decryptor not implemented yet.");
 	}
 
 }

@@ -10,7 +10,7 @@ public class StringAesEncryptor extends AesEncryptor<String> {
 
 	@Override
 	public String encrypt() {
-		return null;
+		throw new UnsupportedOperationException("String AES Encryptor not implemented yet.");
 	}
 
 }
