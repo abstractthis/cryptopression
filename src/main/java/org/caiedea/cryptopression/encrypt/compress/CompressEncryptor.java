@@ -8,6 +8,9 @@ import org.slf4j.LoggerFactory;
 
 public class CompressEncryptor<T> extends Encryptor<T> {
 	private static final Logger log = LoggerFactory.getLogger(CompressEncryptor.class);
+	
+	protected static final String CONFIG_BUFFER_SIZE = "cryptopression.compressBuffer";
+	
 	protected Encryptor<T> encryptor;
 	
 	public CompressEncryptor(Encryptor<T> e) {
