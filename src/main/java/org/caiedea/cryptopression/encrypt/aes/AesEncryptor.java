@@ -24,14 +24,15 @@ import org.slf4j.LoggerFactory;
 public class AesEncryptor<T> extends Encryptor<T> {
 	private static final Logger log = LoggerFactory.getLogger(AesEncryptor.class);
 	private static final String SALT_SIZE_KEY = "cryptopression.saltLength";
-	private static final String ITERATIONS_MAX_KEY = "cryptopression.iterations";
+	private static final String ITERATIONS_KEY = "cryptopression.iterations";
 	private static final String KEY_BIT_LENGTH_KEY = "cryptopression.keyLength";
 	private static final String ENC_PWD_KEY = "cryptopression.password";
 	private static final String ENC_ALGO_KEY = "cryptopression.algorithm";
 	private static final String SECRET_TYPE = "PBKDF2WithHmacSHA1";
 	private static final String CIPHER_TYPE = "AES/CBC/PKCS5Padding";
+	
+	/* Shared config keys for class hierarchy */
 	protected static final String CONFIG_SALT_KEY = "aes.salt";
-	protected static final String CONFIG_ITER_KEY = "aes.iterations";
 	protected static final String CONFIG_CIPHER_KEY = "aes.encrypt.cipher";
 	protected static final String CONFIG_INITVEC_KEY = "aes.initVector";
 	protected static final String CONFIG_FILE_BUFFER_SIZE = "cryptopression.fileBuffer";
@@ -48,12 +49,15 @@ public class AesEncryptor<T> extends Encryptor<T> {
 		// Build up the configuration that AES needs
 		EncryptorConfig aesConfig = new EncryptorConfig();
 		Utils.seedConfigWithProperties(aesConfig);
+		String algo = aesConfig.getStringAttribute(ENC_ALGO_KEY).toUpperCase();
+		if (!"AES".equals(algo)) {
+			String msg = String.format("Wrong algorithm implementation being used. Requested: %s Used: AES", algo);
+			throw new RuntimeException(msg);
+		}
 		int saltByteLength = aesConfig.getIntAttribute(SALT_SIZE_KEY);
 		byte[] salt = Utils.generateSalt(saltByteLength);
 		aesConfig.setTypedAttribute(CONFIG_SALT_KEY, salt);
-		int maxIterations = aesConfig.getIntAttribute(ITERATIONS_MAX_KEY);
-		int iterations = Utils.generateIterations(maxIterations);
-		aesConfig.setIntAttribute(CONFIG_ITER_KEY, iterations);
+		int iterations = aesConfig.getIntAttribute(ITERATIONS_KEY);
 		
 		// Create the Ciphers and the Initialization Vector and place
 		// in the configuration
@@ -61,8 +65,8 @@ public class AesEncryptor<T> extends Encryptor<T> {
 			SecretKeyFactory secretFactory = SecretKeyFactory.getInstance(SECRET_TYPE);
 			int keyBitLength = aesConfig.getIntAttribute(KEY_BIT_LENGTH_KEY);
 			String password = aesConfig.getStringAttribute(ENC_PWD_KEY);
-			String algo = aesConfig.getStringAttribute(ENC_ALGO_KEY).toUpperCase();
-			KeySpec keySpec = new PBEKeySpec(password.toCharArray(), salt, iterations, keyBitLength);
+			char[] pwdRaw = password.toCharArray();
+			KeySpec keySpec = new PBEKeySpec(pwdRaw, salt, iterations, keyBitLength);
 			SecretKey encodingKey = secretFactory.generateSecret(keySpec);
 			SecretKey actualSecret = new SecretKeySpec(encodingKey.getEncoded(), algo);
 			Cipher cipher = Cipher.getInstance(CIPHER_TYPE);
@@ -95,10 +99,16 @@ public class AesEncryptor<T> extends Encryptor<T> {
 		
 		return aesConfig;
 	}
+	
+	@Override
+	protected void writeHeader(T t) {
+		// NOP - Default is to do nothing
+	}
 
 	@Override
 	public T encrypt() {
 		log.error("AES encryption base class has no implementation; use one of the subclasses.");
 		return null;
 	}
+	
 }
