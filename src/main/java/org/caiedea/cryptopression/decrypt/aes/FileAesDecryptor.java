@@ -54,6 +54,7 @@ public class FileAesDecryptor extends AesDecryptor<File> {
 	
 	@Override
 	protected void readHeader(File target) {
+		// Header size is always the first 4 bytes
 		byte[] rawHeaderSize = new byte[4];
 		try {
 			fis.read(rawHeaderSize);
@@ -94,7 +95,7 @@ public class FileAesDecryptor extends AesDecryptor<File> {
 			Utils.deleteDecryptorInputFile(targetFile, this.config);
 		}
 		catch(FileNotFoundException file404Ex) {
-			log.error("File specified for decryption input not found!!");
+			log.error("File specified for decryption not found!!");
 			throw new RuntimeException(file404Ex);
 		}
 		catch(IOException ioe) {
