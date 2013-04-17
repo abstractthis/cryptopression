@@ -18,6 +18,11 @@ public class FilePassThroughEncryptor extends Encryptor<File> {
 	protected EncryptorConfig configSpecifics() {
 		return new EncryptorConfig();
 	}
+	
+	@Override
+	protected void writeHeader(File file) {
+		// NOP
+	}
 
 	@Override
 	public File encrypt() {

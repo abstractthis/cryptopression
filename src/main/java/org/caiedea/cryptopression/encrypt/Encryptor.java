@@ -63,6 +63,12 @@ public abstract class Encryptor<T> {
 	protected abstract EncryptorConfig configSpecifics();
 	
 	/**
+	 * Called so that header information associated with encryption can
+	 * be written to the result set.
+	 */
+	protected abstract void writeHeader(T t);
+	
+	/**
 	 * Actually performs the encryption of the data specified by
 	 * the call to <code>setEncryptTarget</code>. The return type
 	 * is specified by the parameterized implementation of this
