@@ -1,14 +1,5 @@
 package org.caiedea.cryptopression;
 
-import java.io.File;
-
-import org.caiedea.cryptopression.decrypt.Decryptor;
-import org.caiedea.cryptopression.decrypt.FilePassThroughDecryptor;
-import org.caiedea.cryptopression.decrypt.aes.FileAesDecryptor;
-import org.caiedea.cryptopression.encrypt.Encryptor;
-import org.caiedea.cryptopression.encrypt.FilePassThroughEncryptor;
-import org.caiedea.cryptopression.encrypt.aes.FileAesEncryptor;
-import org.caiedea.cryptopression.encrypt.compress.CompressFileEncryptor;
 
 /**
  * Test harness for the Encryptor/Decryptor library
@@ -16,6 +7,7 @@ import org.caiedea.cryptopression.encrypt.compress.CompressFileEncryptor;
  */
 public class App {
     public static void main( String[] args ) {
+    	/*
     	// The file we want to encrypt
     	String exeDir = System.getProperty("user.dir");
     	System.out.println(exeDir);
@@ -34,12 +26,14 @@ public class App {
     		System.err.println( "encryption DONE!" );
     		Decryptor<File> noAlgoDecryptor = new FilePassThroughDecryptor(result);
     		Decryptor<File> fileDecryptor = new FileAesDecryptor(noAlgoDecryptor, decryptedResult);
+    		Decryptor<File> decompressionDecryptor = new DecompressFileDecryptor(fileDecryptor);
     		System.err.println("Performing decryption...");
-    		fileDecryptor.decrypt();
+    		decompressionDecryptor.decrypt();
     		System.err.println("decryption DONE!!!");
     	}
     	catch(RuntimeException re) {
     		System.err.println(re);
     	}
+    	*/
     }
 }
