@@ -6,6 +6,11 @@ public class StringPassThroughDecryptor extends Decryptor<String> {
 	protected DecryptorConfig configSpecifics() {
 		return new DecryptorConfig();
 	}
+	
+	@Override
+	protected void readHeader(String str) {
+		// NOP
+	}
 
 	@Override
 	public String decrypt() {

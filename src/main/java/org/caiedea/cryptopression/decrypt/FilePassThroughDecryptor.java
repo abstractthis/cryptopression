@@ -16,6 +16,11 @@ public class FilePassThroughDecryptor extends Decryptor<File> {
 	}
 	
 	@Override
+	protected void readHeader(File file) {
+		// NOP
+	}
+	
+	@Override
 	public File decrypt() {
 		return targetFile;
 	}
