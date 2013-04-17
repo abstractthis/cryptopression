@@ -50,5 +50,7 @@ public abstract class Decryptor<T> {
 	
 	protected abstract DecryptorConfig configSpecifics();
 	
+	protected abstract void readHeader(T t);
+	
 	public abstract T decrypt();
 }
