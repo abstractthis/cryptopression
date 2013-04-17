@@ -24,6 +24,11 @@ public class CompressEncryptor<T> extends Encryptor<T> {
 		Utils.seedConfigWithProperties(compressConfig);
 		return compressConfig;
 	}
+	
+	@Override
+	protected void writeHeader(T t) {
+		// NOP - Default is to do nothing
+	}
 
 	@Override
 	public T encrypt() {
