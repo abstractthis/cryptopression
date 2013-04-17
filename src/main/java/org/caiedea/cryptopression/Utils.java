@@ -42,12 +42,12 @@ public abstract class Utils {
 	}
 	
 	public static void deleteDecryptorInputFile(File file, DecryptorConfig config) {
-		boolean shouldDelete = config.getIntAttribute(CONFIG_KEEP_RAW_ENC) != 0;
+		boolean shouldDelete = config.getIntAttribute(CONFIG_KEEP_RAW_ENC) == 0;
 		Utils.deleteInputFileIfNeeded(file, shouldDelete);
 	}
 	
 	public static void deleteEncryptorInputFile(File file, EncryptorConfig config) {
-		boolean shouldDelete = config.getIntAttribute(CONFIG_KEEP_RAW_ENC) != 0;
+		boolean shouldDelete = config.getIntAttribute(CONFIG_KEEP_RAW_ENC) == 0;
 		Utils.deleteInputFileIfNeeded(file, shouldDelete);
 	}
 	
