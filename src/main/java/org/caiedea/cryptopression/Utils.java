@@ -41,16 +41,31 @@ public abstract class Utils {
 		return propCache;
 	}
 	
+	/**
+	 * Convenience method that determines whether the decryptors input
+	 * should be deleted after use or maintained.
+	 * @param file
+	 * @param config
+	 */
 	public static void deleteDecryptorInputFile(File file, DecryptorConfig config) {
 		boolean shouldDelete = config.getIntAttribute(CONFIG_KEEP_RAW_ENC) == 0;
 		Utils.deleteInputFileIfNeeded(file, shouldDelete);
 	}
 	
+	/**
+	 * Convenience method that determines whether the encryptors input
+	 * should be deleted after use or maintained.
+	 * @param file
+	 * @param config
+	 */
 	public static void deleteEncryptorInputFile(File file, EncryptorConfig config) {
 		boolean shouldDelete = config.getIntAttribute(CONFIG_KEEP_RAW_ENC) == 0;
 		Utils.deleteInputFileIfNeeded(file, shouldDelete);
 	}
 	
+	/*
+	 * Actually performs the deletion of the input data.
+	 */
 	private static void deleteInputFileIfNeeded(File file, boolean shouldDelete) {
 		if (shouldDelete) {
 			boolean deleteSuccessful = file.delete();
@@ -87,6 +102,24 @@ public abstract class Utils {
 				MIN_ITERATIONS +
 					(int)(Math.random() * ((upperBound - MIN_ITERATIONS) + 1));
 		return iterations;
+	}
+	
+	/**
+	 * Provided so that programmatic changes to the configuration are possible.
+	 * <p>
+	 * If the key provided is already associated with a property that key/value
+	 * pair are removed before adding the key/value pair specified here.
+	 * <p>
+	 * NOTE: Changes will be reflected in newly instantiated
+	 * <code>Encryptor</code> and <code>Decryptor</code> classes.
+	 * @param key the key of the property to add
+	 * @param value the value of the property to add
+	 */
+	public static void propertyOverride(String key, String value) {
+		if (propCache.containsKey(key)) {
+			propCache.remove(key);
+		}
+		propCache.put(key, value);
 	}
 	
 	/**
