@@ -10,6 +10,10 @@ public class FilePassThroughDecryptor extends Decryptor<File> {
 		targetFile = file;
 	}
 	
+	public FilePassThroughDecryptor(String path) {
+		this(new File(path));
+	}
+	
 	@Override
 	protected DecryptorConfig configSpecifics() {
 		return new DecryptorConfig();
