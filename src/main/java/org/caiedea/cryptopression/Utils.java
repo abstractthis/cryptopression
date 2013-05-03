@@ -15,12 +15,13 @@ import org.slf4j.LoggerFactory;
 
 public abstract class Utils {
 	private static final Logger log = LoggerFactory.getLogger(Utils.class);
+	private static final String PROPS_FILE_PATH = "/cryptopression.properties";
 	private static final String CONFIG_KEEP_RAW_ENC = "cryptopression.keepRawInput";
 	private static final int MIN_ITERATIONS = 1024;
 	private static Properties propCache;
 	static {
 		InputStream propStream =
-				Utils.class.getResourceAsStream("/cryptopression.properties");
+				Utils.class.getResourceAsStream(PROPS_FILE_PATH);
 		propCache = new Properties();
 		try {
 			propCache.load(propStream);
